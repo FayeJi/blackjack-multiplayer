@@ -1,4 +1,4 @@
-Online Multiplayer Blackjack
+# Online Multiplayer Blackjack
 
 A blackjack web online game supporting multiplayer in real time, players are able to join game room and start play using virtual currency with dealers and other players in the same room.
 
