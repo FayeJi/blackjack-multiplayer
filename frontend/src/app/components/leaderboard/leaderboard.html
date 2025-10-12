@@ -1,0 +1,31 @@
+<div class="leaderboard-container">
+    <header>
+        <h1>Top Players</h1>
+        <a routerLink="/lobby">Back to Lobby</a>
+    </header>
+
+    <div class="leaderboard-table-container">
+        <table class="leaderboard-table" *ngIf="leaderboardData$ | async as leaderboard; else loading">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Hands Played</th>
+                    <th>Win Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let player of leaderboard; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ player.username }}</td>
+                    <td>{{ player.handsPlayed }}</td>
+                    <td>{{ (player.handsWon / (player.handsPlayed || 1) * 100) | number:'1.1-2' }}%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <ng-template #loading>
+        <p>Loading leaderboard...</p>
+    </ng-template>
+</div>

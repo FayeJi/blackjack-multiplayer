@@ -1,0 +1,21 @@
+<div class="profile-container" *ngIf="stats">
+    <h3>Welcome, {{ stats.username }}</h3>
+    <div class="stats-grid">
+        <div>
+            <span class="stat-label">Balance:</span>
+            <span class="stat-value">{{ stats.balance | currency }}</span>
+        </div>
+        <div>
+            <span class="stat-label">Hands Played:</span>
+            <span class="stat-value">{{ stats.handsPlayed }}</span>
+        </div>
+        <div>
+            <span class="stat-label">Hands Won:</span>
+            <span class="stat-value">{{ stats.handsWon }}</span>
+        </div>
+        <div>
+            <span class="stat-label">Win Rate:</span>
+            <span class="stat-value">{{ winRate | number:'1.1-2' }}%</span>
+        </div>
+    </div>
+</div>

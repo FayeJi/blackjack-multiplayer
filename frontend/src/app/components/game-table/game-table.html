@@ -1,0 +1,84 @@
+<div class="game-table-container" *ngIf="gameState">
+    <div class="game-table-layout">
+        <div class="main-game-area">
+
+            <header>
+                <h1>Game Table: {{ gameState.roomName }}</h1>
+                <button class="leave-button" (click)="onLeaveGame()">Leave to Lobby</button>
+                <p class="status-message">{{ gameState.statusMessage }}</p>
+            </header>
+
+            <!-- Dealer's Area -->
+            <div class="hand-area dealer-area">
+                <h2>Dealer's Hand ({{ getHandValue(gameState.dealerHand) }})</h2>
+                <div class="cards-container">
+                    <div *ngFor="let card of gameState.dealerHand.cards" class="card"
+                        [class.hidden-card]="card.rank === 'HIDDEN'">
+                        <span *ngIf="card.rank !== 'HIDDEN'">
+                            {{ card.rank }} of {{ card.suit }}
+                        </span>
+                        <span *ngIf="card.rank === 'HIDDEN'">
+                            FACE DOWN
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Players' Area -->
+            <div class="players-area">
+                <div *ngFor="let player of gameState.playerHands | keyvalue: originalOrder" class="player-hand"
+                    [ngClass]="{'active-player': player.key === gameState?.activePlayerUsername}">
+                    <!-- <h3>{{ player.key }} ({{ getHandValue(player.value) }})</h3> -->
+                    <h3>{{ player.key }} ({{ getHandValue(player.value) }})
+                        <span *ngIf="gameState?.phase === 'BETTING'" class="ready-status">
+                            <!-- THE FIX IS HERE -->
+                            <span *ngIf="gameState?.playerReadyStatus?.[player.key]" class="ready">(Ready)</span>
+                            <span *ngIf="!gameState?.playerReadyStatus?.[player.key]"
+                                class="waiting">(Waiting...)</span>
+                        </span>
+                    </h3>
+
+                    <div class="cards-container">
+                        <div *ngFor="let card of player.value.cards" class="card">
+                            {{ card.rank }} of {{ card.suit }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player Actions Area -->
+            <div class="actions-area">
+                <div *ngIf="gameState.phase === 'WAITING'" class="waiting-controls">
+                    <h3>Waiting for players to join...</h3>
+                    <!-- TODO: This button should ideally only be visible to the "host" or first player -->
+                    <button *ngIf="isHost()" (click)="sendPlayerAction('start')">Start Game</button>
+                </div>
+
+                <!-- BETTING UI: Appears only during the 'BETTING' phase -->
+                <div *ngIf="gameState.phase === 'BETTING'" class="betting-controls">
+                    <label for="bet-amount">Your Bet:</label>
+                    <input id="bet-amount" type="number" [(ngModel)]="betAmount" min="1">
+                    <button (click)="onPlaceBet()">Place Bet</button>
+                    <button *ngIf="isHost()" (click)="sendPlayerAction('deal')">Deal Cards</button>
+                </div>
+
+                <!-- GAMEPLAY UI: Appears only during the 'PLAYER_TURN' phase -->
+                <div *ngIf="gameState.phase === 'PLAYER_TURN'" class="gameplay-controls">
+                    <p>Your Actions</p>
+                    <button (click)="sendPlayerAction('hit')" [disabled]="!isMyTurn()">Hit</button>
+                    <button (click)="sendPlayerAction('stand')" [disabled]="!isMyTurn()">Stand</button>
+                </div>
+
+                <!-- "PLAY AGAIN" UI: Appears only when the hand is over -->
+                <div *ngIf="gameState.phase === 'HAND_OVER'" class="hand-over-controls">
+                    <button (click)="sendPlayerAction('reset')">Play Again</button>
+                </div>
+
+            </div>
+        </div>
+        <div class="chat-area">
+            <!-- Pass the gameId to the chat-box component -->
+            <app-chat-box [gameId]="gameState!.gameId" *ngIf="gameState"></app-chat-box>
+        </div>
+    </div>
+</div>

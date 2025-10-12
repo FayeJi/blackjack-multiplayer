@@ -1,0 +1,29 @@
+<div class="user-list-container">
+    <h2>All Registered Users</h2>
+    <table *ngIf="users$ | async as users; else loading">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Balance</th>
+                <th>Hands Played</th>
+                <th>Hands Won</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users">
+                <td>{{ user.username }}</td>
+                <td>{{ user.balance | currency }}</td>
+                <td>{{ user.handsPlayed }}</td>
+                <td>{{ user.handsWon }}</td>
+                <td>
+                    <!-- Add buttons for Ban, Reset Balance, etc. here -->
+                    <button class="action-button">Ban</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <ng-template #loading>
+        <p>Loading users...</p>
+    </ng-template>
+</div>

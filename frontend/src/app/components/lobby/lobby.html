@@ -1,0 +1,23 @@
+<div class="lobby-container">
+    <app-player-profile></app-player-profile>
+    <header>
+        <h1>Game Lobby</h1>
+        <div>
+            <a routerLink="/leaderboard" class="button-link">View Leaderboard</a>
+        </div>
+        <a *ngIf="isAdmin" routerLink="/admin" class="button-link">Admin Panel</a>
+    </header>
+
+    <div class="game-list">
+        <h2>Active Games</h2>
+        <div *ngIf="activeGames.length === 0" class="no-games">
+            No active games found. Why not create one?
+        </div>
+
+        <div *ngFor="let game of activeGames" class="game-item">
+            <span class="room-name">{{ game.roomName }} </span>
+            <span>(Players: {{ Object.keys(game.playerHands).length }} / 6) </span>
+            <button (click)="onJoinGame(game.gameId)">Join</button>
+        </div>
+    </div>
+</div>
