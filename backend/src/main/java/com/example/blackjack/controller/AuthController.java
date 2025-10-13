@@ -59,18 +59,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginDto loginDto) {
-        // Authenticate the user with username and password
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
 
-        // If authentication is successful, set it in the security context
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Generate the JWT
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String jwt = jwtUtil.generateToken(userDetails);
 
-        // Return the token in the response
         return ResponseEntity.ok(new AuthResponseDto(jwt));
     }
 }

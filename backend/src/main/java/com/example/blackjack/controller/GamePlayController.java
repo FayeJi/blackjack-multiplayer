@@ -20,7 +20,6 @@ public class GamePlayController {
 
     @MessageMapping("/game/{gameId}/action")
     public void handlePlayerAction(@DestinationVariable String gameId, PlayerActionDto action, Principal principal) {
-        // 'Principal' is automatically populated by Spring Security with the authenticated user's info
         String username = principal.getName();
         gameService.handlePlayerAction(gameId, username, action.getAction());
     }

@@ -20,25 +20,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        // Add our interceptor to the chain
         registration.interceptors(jwtChannelInterceptor);
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // The endpoint that clients will connect to.
-        // SockJS is a fallback for browsers that don't support WebSocket.
         registry.addEndpoint("/ws").setAllowedOriginPatterns("http://localhost:4200").withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // Defines message destinations starting with "/app".
-        // These are messages bound for @MessageMapping-annotated methods in controllers.
         registry.setApplicationDestinationPrefixes("/app");
-
-        // Defines the prefix for destinations that the broker will handle (e.g., broadcasting to clients).
-        // Clients will subscribe to topics like "/topic/public" or "/topic/game/123".
         registry.enableSimpleBroker("/topic");
     }
 }

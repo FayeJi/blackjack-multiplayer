@@ -38,12 +38,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         jwt = authHeader.substring(7); // "Bearer ".length()
         username = jwtUtil.extractUsername(jwt);
 
-        // If username is extracted and user is not already authenticated
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
             if (jwtUtil.validateToken(jwt, userDetails)) {
-                // If token is valid, create an authentication token and set it in the security context
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

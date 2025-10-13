@@ -26,7 +26,6 @@ public class LeaderboardController {
                 .map(user -> {
                     UserStatsDto dto = new UserStatsDto();
                     dto.setUsername(user.getUsername());
-                    dto.setBalance(user.getBalance());
                     dto.setHandsPlayed(user.getHandsPlayed());
                     dto.setHandsWon(user.getHandsWon());
                     return dto;

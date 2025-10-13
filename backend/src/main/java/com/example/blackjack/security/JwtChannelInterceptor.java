@@ -24,9 +24,7 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
-        // We only care about the initial CONNECT message
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-            // The token is sent in a header named "Authorization" from the client
             String authHeader = accessor.getFirstNativeHeader("Authorization");
 
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -36,7 +34,6 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
                 if (username != null) {
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                     if (jwtUtil.validateToken(jwt, userDetails)) {
-                        // If the token is valid, we create an Authentication object and set it as the user for this session
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                                 userDetails, null, userDetails.getAuthorities());
                         accessor.setUser(authentication);

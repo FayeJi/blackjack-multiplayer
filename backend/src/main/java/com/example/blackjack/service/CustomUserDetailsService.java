@@ -23,7 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         com.example.blackjack.model.User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        // Convert Set<Role> to a collection of GrantedAuthority
         var authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
