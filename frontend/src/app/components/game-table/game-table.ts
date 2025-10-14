@@ -17,6 +17,7 @@ import { GameService } from '../../services/game';
     templateUrl: './game-table.html',
     styleUrls: ['./game-table.scss']
 })
+
 export class GameTable implements OnInit, OnDestroy {
     public betAmount: number = 10;
     public Object = Object;
@@ -30,7 +31,6 @@ export class GameTable implements OnInit, OnDestroy {
     private gameId: string | null = null;
     private gameSubscription: Subscription | null = null;
 
-    // Preserve original property order when using keyvalue pipe
     originalOrder = (a: KeyValue<string, any>, b: KeyValue<string, any>): number => {
         return 0;
     }
@@ -39,20 +39,18 @@ export class GameTable implements OnInit, OnDestroy {
         this.authService.currentUserUsername$.subscribe(username => {
             this.myUsername = username;
         });
-        // Get the game ID from the URL (e.g., from '/game/abc-123')
+
         this.gameId = this.route.snapshot.paramMap.get('id');
 
         if (this.gameId) {
-            // 1. Actively fetch the current state via HTTP
             this.gameService.getGameById(this.gameId).subscribe({
                 next: (initialState) => {
                     this.gameState = initialState;
-                    // 2. After getting the initial state, connect to WebSocket for live updates
                     this.connectToWebSocket();
                 },
                 error: (err) => {
                     console.error('Failed to fetch initial game state', err);
-                    // Optionally navigate back to the lobby or show an error message
+                    
                 }
             });
         }
@@ -64,7 +62,6 @@ export class GameTable implements OnInit, OnDestroy {
         this.webSocketService.connect();
         const topic = `/topic/game/${this.gameId}`;
 
-        // Unsubscribe from any previous subscription
         if (this.gameSubscription) {
             this.gameSubscription.unsubscribe();
         }
@@ -73,7 +70,7 @@ export class GameTable implements OnInit, OnDestroy {
             .subscribeToTopic<GameState>(topic)
             .subscribe(updatedState => {
                 console.log('Received game state update from WebSocket:', updatedState);
-                this.gameState = updatedState; // Update the view with new state
+                this.gameState = updatedState;
             });
     }
 
@@ -83,10 +80,8 @@ export class GameTable implements OnInit, OnDestroy {
         }
     }
 
-    // Placeholder for sending a player action
     sendPlayerAction(action: string): void {
         if (this.gameId) {
-            // Example: this will be for 'hit', 'stand', 'double', 'split'
             const destination = `/app/game/${this.gameId}/action`;
             this.webSocketService.sendMessage(destination, { action });
         }

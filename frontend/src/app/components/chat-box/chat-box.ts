@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { WebSocketService } from '../../services/web-socket';
 
-// Define the shape of a chat message object
 export interface ChatMessage {
     sender: string;
     content: string;
@@ -19,7 +18,7 @@ export interface ChatMessage {
     styleUrls: ['./chat-box.scss']
 })
 export class ChatBox implements OnInit, OnDestroy {
-    @Input() gameId!: string; // The parent component (GameTable) will provide the gameId
+    @Input() gameId!: string;
 
     private webSocketService = inject(WebSocketService);
     private chatSubscription: Subscription | null = null;
@@ -34,7 +33,6 @@ export class ChatBox implements OnInit, OnDestroy {
                 .subscribeToTopic<ChatMessage>(topic)
                 .subscribe(message => {
                     this.messages.push(message);
-                    // Optional: Add logic to auto-scroll to the bottom
                 });
         }
     }
@@ -49,7 +47,7 @@ export class ChatBox implements OnInit, OnDestroy {
         if (this.newMessage.trim() && this.gameId) {
             const destination = `/app/game/${this.gameId}/chat`;
             this.webSocketService.sendMessage(destination, { content: this.newMessage });
-            this.newMessage = ''; // Clear the input box
+            this.newMessage = '';
         }
     }
 }

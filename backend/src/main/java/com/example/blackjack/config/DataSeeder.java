@@ -39,6 +39,7 @@ public class DataSeeder implements CommandLineRunner {
 
         for (int i = 1; i <= 5; i++) {
             GameState room = new GameState("Table " + i);
+
             gameService.registerGame(room);
         }
     }

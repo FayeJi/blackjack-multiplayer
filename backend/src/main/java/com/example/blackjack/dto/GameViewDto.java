@@ -11,6 +11,7 @@ import java.util.Map;
 @Data
 public class GameViewDto {
     private String gameId;
+    private String roomName;
     private GameState.GamePhase phase;
     private String activePlayerUsername;
     private String statusMessage;
@@ -21,6 +22,7 @@ public class GameViewDto {
     public static GameViewDto from(GameState state) {
         GameViewDto view = new GameViewDto();
         view.setGameId(state.getGameId());
+        view.setRoomName(state.getRoomName());
         view.setPhase(state.getPhase());
         view.setActivePlayerUsername(state.getActivePlayerUsername());
         view.setStatusMessage(state.getStatusMessage());

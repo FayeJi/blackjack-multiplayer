@@ -2,21 +2,19 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { RouterModule } from '@angular/router'; // Import RouterModule for routerLink
-
-// We can reuse the UserStats interface
+import { RouterModule } from '@angular/router';
 import { UserStats } from '../../services/user';
 
 @Component({
     selector: 'app-leaderboard',
     standalone: true,
-    imports: [CommonModule, RouterModule], // Add RouterModule
+    imports: [CommonModule, RouterModule],
     templateUrl: './leaderboard.html',
     styleUrls: ['./leaderboard.scss']
 })
 export class Leaderboard implements OnInit {
     private http = inject(HttpClient);
-    public leaderboardData$!: Observable<UserStats[]>; // Use the async pipe
+    public leaderboardData$!: Observable<UserStats[]>;
 
     ngOnInit(): void {
         this.leaderboardData$ = this.fetchLeaderboard();

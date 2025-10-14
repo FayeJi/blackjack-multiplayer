@@ -11,22 +11,19 @@ export const adminGuard: CanActivateFn = (route, state) => {
     if (token) {
         try {
             const decodedToken: { sub: string, roles: string[] } = jwtDecode(token);
-
-            // Check if the 'roles' array includes 'ROLE_ADMIN'
             const isAdmin = decodedToken.roles.includes('ROLE_ADMIN');
 
             if (isAdmin) {
-                return true; // Access granted
+                return true; 
             }
 
         } catch (error) {
             console.error('Error decoding token', error);
-            router.navigate(['/lobby']); // Invalid token, redirect
+            router.navigate(['/lobby']);
             return false;
         }
     }
 
-    // If not an admin or no token, redirect to the lobby
     router.navigate(['/lobby']);
     return false;
 };

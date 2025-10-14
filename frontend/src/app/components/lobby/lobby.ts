@@ -27,7 +27,6 @@ export class Lobby implements OnInit {
 
     ngOnInit(): void {
         this.loadGames();
-        // Connect to WebSocket and subscribe for real-time updates
         this.webSocketService.connect();
         this.lobbySubscription = this.webSocketService
             .subscribeToTopic<GameState[]>('/topic/lobby')
@@ -48,12 +47,9 @@ export class Lobby implements OnInit {
     }
 
     ngOnDestroy(): void {
-        // Clean up the subscription when the component is destroyed
         if (this.lobbySubscription) {
             this.lobbySubscription.unsubscribe();
         }
-        // Optionally disconnect if the user is leaving the app entirely
-        // this.webSocketService.disconnect();
     }
 
     loadGames(): void {

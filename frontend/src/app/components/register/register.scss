@@ -1,6 +1,3 @@
-// Use the same styling as the login component for consistency
-// You can create a shared styles file later to avoid duplication
-
 .register-container {
     display: flex;
     justify-content: center;
@@ -40,7 +37,7 @@
         padding: 10px;
         border: 1px solid #ddd;
         border-radius: 4px;
-        box-sizing: border-box; // Ensures padding doesn't affect width
+        box-sizing: border-box;
     }
 }
 

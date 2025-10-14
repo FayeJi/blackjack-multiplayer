@@ -114,9 +114,9 @@ public class GameService {
         if (game.getPlayerOrder().isEmpty()) {
             resetGame(game);
             System.out.println("Game " + game.getGameId() + " is now empty and has been reset.");
-        } else {
-            broadcastLobbyUpdate();
         }
+
+        broadcastLobbyUpdate();
     }
 
     private void startGame(GameState game) {

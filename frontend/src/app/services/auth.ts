@@ -7,8 +7,9 @@ import { jwtDecode } from 'jwt-decode'
 @Injectable({
     providedIn: 'root'
 })
+
 export class AuthService {
-    private apiUrl = 'http://localhost:8080/api/auth'; // Your Spring Boot backend URL
+    private apiUrl = 'http://localhost:8080/api/auth';
     private http = inject(HttpClient);
 
     constructor() {
@@ -21,7 +22,7 @@ export class AuthService {
     private loadUserFromToken(): void {
         const token = this.getToken();
         if (token) {
-            const decodedToken: { sub: string } = jwtDecode(token); // 'sub' is the standard claim for username
+            const decodedToken: { sub: string } = jwtDecode(token);
             this.currentUserUsername.next(decodedToken.sub);
         }
     }
@@ -49,12 +50,10 @@ export class AuthService {
 
     public logout(): void {
         localStorage.removeItem('access_token');
-        this.currentUserUsername.next(null); // Notify all subscribers that the user logged out
-        // Later, you'll navigate the user to the login page here
+        this.currentUserUsername.next(null);
     }
 
     public getUsername(): string | null {
         return this.currentUserUsername.getValue();
     }
-
 }

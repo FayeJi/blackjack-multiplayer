@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import * as Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { GameState } from './game';
 import { AuthService } from './auth';
 
 @Injectable({
@@ -42,7 +41,6 @@ export class WebSocketService {
         }, (error) => {
             console.error('Connection error:', error);
             this.isConnected.next(false);
-            // Optional: implement reconnection logic here
         });
     }
 

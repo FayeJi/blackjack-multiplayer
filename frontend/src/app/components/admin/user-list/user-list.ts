@@ -11,6 +11,7 @@ import { UserStats } from '../../../services/user';
     templateUrl: './user-list.html',
     styleUrls: ['./user-list.scss']
 })
+
 export class UserList implements OnInit {
     private adminService = inject(AdminService);
     public users$!: Observable<UserStats[]>;

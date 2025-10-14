@@ -3,7 +3,11 @@
         <div class="main-game-area">
 
             <header>
-                <h1>Game Table: {{ gameState.roomName }}</h1>
+                <!-- <h1>Game Table: {{ gameState?.roomName }}</h1> -->
+                <h1 *ngIf="gameState; else loading">Game Table: {{ gameState.roomName }}</h1>
+                <ng-template #loading>
+                    <h1>Loading game...</h1>
+                </ng-template>
                 <button class="leave-button" (click)="onLeaveGame()">Leave to Lobby</button>
                 <p class="status-message">{{ gameState.statusMessage }}</p>
             </header>
@@ -28,15 +32,7 @@
             <div class="players-area">
                 <div *ngFor="let player of gameState.playerHands | keyvalue: originalOrder" class="player-hand"
                     [ngClass]="{'active-player': player.key === gameState?.activePlayerUsername}">
-                    <!-- <h3>{{ player.key }} ({{ getHandValue(player.value) }})</h3> -->
-                    <h3>{{ player.key }} ({{ getHandValue(player.value) }})
-                        <span *ngIf="gameState?.phase === 'BETTING'" class="ready-status">
-                            <!-- THE FIX IS HERE -->
-                            <span *ngIf="gameState?.playerReadyStatus?.[player.key]" class="ready">(Ready)</span>
-                            <span *ngIf="!gameState?.playerReadyStatus?.[player.key]"
-                                class="waiting">(Waiting...)</span>
-                        </span>
-                    </h3>
+                    <h3>{{ player.key }} ({{ getHandValue(player.value) }})</h3>
 
                     <div class="cards-container">
                         <div *ngFor="let card of player.value.cards" class="card">
@@ -50,7 +46,6 @@
             <div class="actions-area">
                 <div *ngIf="gameState.phase === 'WAITING'" class="waiting-controls">
                     <h3>Waiting for players to join...</h3>
-                    <!-- TODO: This button should ideally only be visible to the "host" or first player -->
                     <button *ngIf="isHost()" (click)="sendPlayerAction('start')">Start Game</button>
                 </div>
 
@@ -71,7 +66,7 @@
 
                 <!-- "PLAY AGAIN" UI: Appears only when the hand is over -->
                 <div *ngIf="gameState.phase === 'HAND_OVER'" class="hand-over-controls">
-                    <button (click)="sendPlayerAction('reset')">Play Again</button>
+                    <button *ngIf="isHost()" (click)="sendPlayerAction('reset')">Play Again</button>
                 </div>
 
             </div>

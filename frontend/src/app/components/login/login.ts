@@ -7,12 +7,11 @@ import { AuthService } from '../../services/auth';
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, RouterModule], // Import RouterModule for routerLink
+    imports: [CommonModule, ReactiveFormsModule, RouterModule],
     templateUrl: './login.html',
     styleUrls: ['./login.scss']
 })
 export class Login {
-    // Dependency Injection using inject()
     private fb = inject(FormBuilder);
     private authService = inject(AuthService);
     private router = inject(Router);
@@ -29,17 +28,15 @@ export class Login {
 
     onSubmit(): void {
         if (this.loginForm.invalid) {
-            return; // Don't submit if the form is invalid
+            return;
         }
 
-        this.errorMessage = null; // Clear previous errors
+        this.errorMessage = null;
         this.authService.login(this.loginForm.value).subscribe({
             next: () => {
-                // On successful login, navigate to the lobby
                 this.router.navigate(['/lobby']);
             },
             error: (err) => {
-                // Handle login errors (e.g., bad credentials)
                 console.error('Login failed', err);
                 this.errorMessage = 'Invalid username or password. Please try again.';
             }

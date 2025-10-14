@@ -24,13 +24,12 @@ export class Register {
         this.registerForm = this.fb.group({
             username: ['', [Validators.required, Validators.minLength(3)]],
             password: ['', [Validators.required, Validators.minLength(4)]]
-            // You could add a 'confirmPassword' field here with a custom validator
         });
     }
 
     onSubmit(): void {
         if (this.registerForm.invalid) {
-            return; // Stop if the form is invalid
+            return;
         }
 
         this.errorMessage = null;
@@ -39,14 +38,12 @@ export class Register {
         this.authService.register(this.registerForm.value).subscribe({
             next: (response) => {
                 this.successMessage = "Registration successful! You will be redirected to the login page.";
-                // Navigate to the login page after a short delay
                 setTimeout(() => {
                     this.router.navigate(['/login']);
-                }, 2000); // 2-second delay
+                }, 2000);
             },
             error: (err) => {
                 console.error('Registration failed', err);
-                // The backend sends a specific error message which we can display
                 this.errorMessage = err.error || 'An unknown registration error occurred.';
             }
         });
