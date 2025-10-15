@@ -145,15 +145,17 @@ public class GameService {
     }
 
     private void moveToNextPlayer(GameState game) {
-        int currentPlayerIndex = game.getPlayerOrder().indexOf(game.getActivePlayerUsername());
+        List<String> activePlayersThisHand = game.getPlayerOrder().stream()
+                .filter(username -> game.getPlayerBets().containsKey(username) && game.getPlayerBets().get(username) > 0)
+                .collect(Collectors.toList());
 
-        for (int i = currentPlayerIndex + 1; i < game.getPlayerOrder().size(); i++) {
-            String nextPlayer = game.getPlayerOrder().get(i);
-            if (game.getPlayerHands().get(nextPlayer).getValue() <= 21) {
-                game.setActivePlayerUsername(nextPlayer);
-                game.setStatusMessage("It's now " + nextPlayer + "'s turn.");
-                return;
-            }
+        int currentPlayerIndex = activePlayersThisHand.indexOf(game.getActivePlayerUsername());
+
+        if (currentPlayerIndex >= 0 && currentPlayerIndex < activePlayersThisHand.size() - 1) {
+            String nextPlayer = activePlayersThisHand.get(currentPlayerIndex + 1);
+            game.setActivePlayerUsername(nextPlayer);
+            game.setStatusMessage("It's now " + nextPlayer + "'s turn.");
+            return;
         }
 
         playDealerTurn(game);

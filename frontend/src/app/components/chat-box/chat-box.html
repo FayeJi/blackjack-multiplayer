@@ -1,12 +1,21 @@
-<div class="chat-container">
-    <div class="message-area">
-        <div *ngFor="let msg of messages" class="chat-message">
-            <span class="sender">{{ msg.sender }}:</span>
-            <span class="content">{{ msg.content }}</span>
+<p-card header="Chat" styleClass="w-full shadow-2">
+    <p-scrollPanel #scrollPanel [style]="{ 'height': '300px' }">
+        <div class="chat-messages-container p-3">
+            <div *ngFor="let msg of messages" class="chat-message" [ngClass]="{
+                    'my-message': msg.sender === currentUser,
+                    'other-message': msg.sender !== currentUser
+                }">
+                <strong class="sender">{{ msg.sender }}:</strong>
+                <p class="content m-0">{{ msg.content }}</p>
+            </div>
         </div>
-    </div>
-    <div class="input-area">
-        <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type a message...">
-        <button (click)="sendMessage()">Send</button>
-    </div>
-</div>
+    </p-scrollPanel>
+
+    <ng-template pTemplate="footer">
+        <p-inputGroup>
+            <input pInputText type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()"
+                placeholder="Type a message..." />
+            <button pButton pRipple icon="pi pi-send" (click)="sendMessage()" [disabled]="!newMessage"></button>
+        </p-inputGroup>
+    </ng-template>
+</p-card>

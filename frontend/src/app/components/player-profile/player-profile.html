@@ -1,21 +1,46 @@
-<div class="profile-container" *ngIf="stats">
-    <h3>Welcome, {{ stats.username }}</h3>
-    <div class="stats-grid">
-        <div>
-            <span class="stat-label">Balance:</span>
-            <span class="stat-value">{{ stats.balance | currency }}</span>
-        </div>
-        <div>
-            <span class="stat-label">Hands Played:</span>
-            <span class="stat-value">{{ stats.handsPlayed }}</span>
-        </div>
-        <div>
-            <span class="stat-label">Hands Won:</span>
-            <span class="stat-value">{{ stats.handsWon }}</span>
-        </div>
-        <div>
-            <span class="stat-label">Win Rate:</span>
-            <span class="stat-value">{{ winRate | number:'1.1-2' }}%</span>
-        </div>
-    </div>
+<div class="flex justify-content-left p-4" *ngIf="stats">
+
+    <p-card styleClass="w-full max-w-30rem shadow-2">
+        <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-3 p-3">
+                <h3 class="m-0">Welcome back {{ stats.username }}!</h3>
+            </div>
+        </ng-template>
+
+        <!-- Main Stats List -->
+        <ul class="list-none p-0 m-0">
+            <li class="flex align-items-center justify-content-between p-3">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-wallet text-xl text-primary"></i>
+                    <span class="font-medium">Balance</span>
+                </div>
+                <span class="font-bold text-lg">{{ stats.balance | currency }}</span>
+            </li>
+
+            <li class="flex align-items-center justify-content-between p-3">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-play text-xl text-primary"></i>
+                    <span class="font-medium">Hands Played</span>
+                </div>
+                <span class="font-bold text-lg">{{ stats.handsPlayed }}</span>
+            </li>
+
+            <li class="flex align-items-center justify-content-between p-3">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-trophy text-xl text-primary"></i>
+                    <span class="font-medium">Hands Won</span>
+                </div>
+                <span class="font-bold text-lg">{{ stats.handsWon }}</span>
+            </li>
+
+            <li class="flex align-items-center justify-content-between p-3">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-trophy text-xl text-primary"></i>
+                    <span class="font-medium">Win Rate</span>
+                </div>
+                <span class="font-bold text-lg">{{ winRate | number:'1.1-2' }}%</span>
+            </li>
+        </ul>
+    </p-card>
+
 </div>

@@ -9,11 +9,26 @@ import { AuthService } from '../../services/auth';
 import { FormsModule } from '@angular/forms';
 import { ChatBox } from '../chat-box/chat-box';
 import { GameService } from '../../services/game';
+import { ToolbarModule } from 'primeng/toolbar';
+import { PanelModule } from 'primeng/panel';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
+import { TagModule } from 'primeng/tag';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
     selector: 'app-game-table',
     standalone: true,
-    imports: [CommonModule, FormsModule, ChatBox],
+    imports: [CommonModule, FormsModule, ChatBox, ToolbarModule,
+        PanelModule,
+        CardModule,
+        ButtonModule,
+        RippleModule,
+        TagModule,
+        InputNumberModule,
+        FloatLabelModule],
     templateUrl: './game-table.html',
     styleUrls: ['./game-table.scss']
 })
@@ -50,7 +65,7 @@ export class GameTable implements OnInit, OnDestroy {
                 },
                 error: (err) => {
                     console.error('Failed to fetch initial game state', err);
-                    
+
                 }
             });
         }
@@ -141,5 +156,24 @@ export class GameTable implements OnInit, OnDestroy {
         }
 
         return this.myUsername === this.gameState.playerOrder[0];
+    }
+
+    getRankSymbol(rank: string): string {
+        switch (rank) {
+            case 'ACE': return 'A';
+            case 'KING': return 'K';
+            case 'QUEEN': return 'Q';
+            case 'JACK': return 'J';
+            case 'TEN': return '10';
+            case 'NINE': return '9';
+            case 'EIGHT': return '8';
+            case 'SEVEN': return '7';
+            case 'SIX': return '6';
+            case 'FIVE': return '5';
+            case 'FOUR': return '4';
+            case 'THREE': return '3';
+            case 'TWO': return '2';
+            default: return '';
+        }
     }
 }

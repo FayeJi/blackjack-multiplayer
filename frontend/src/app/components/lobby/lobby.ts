@@ -7,11 +7,19 @@ import { PlayerProfile } from '../player-profile/player-profile';
 import { AuthService } from '../../services/auth';
 import { jwtDecode } from 'jwt-decode';
 import { RouterModule } from '@angular/router';
+import { ToolbarModule } from 'primeng/toolbar';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
+import { CardModule } from 'primeng/card';
+import { TableModule } from 'primeng/table';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @Component({
     selector: 'app-lobby',
     standalone: true,
-    imports: [CommonModule, PlayerProfile, RouterModule],
+    imports: [CommonModule, PlayerProfile, RouterModule, ToolbarModule, ButtonModule, RippleModule, CardModule,
+        TableModule, ProgressBarModule
+    ],
     templateUrl: './lobby.html',
     styleUrls: ['./lobby.scss']
 })
@@ -60,5 +68,9 @@ export class Lobby implements OnInit {
 
     onJoinGame(gameId: string): void {
         this.gameService.joinGame(gameId);
+    }
+
+    onLogout(): void{
+        this.authService.logout();
     }
 }

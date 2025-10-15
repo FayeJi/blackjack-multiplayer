@@ -1,8 +1,14 @@
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { WebSocketService } from '../../services/web-socket';
+import { CardModule } from 'primeng/card';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
 
 export interface ChatMessage {
     sender: string;
@@ -13,11 +19,12 @@ export interface ChatMessage {
 @Component({
     selector: 'app-chat-box',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, CardModule, ScrollPanelModule, InputGroupModule, InputTextModule, ButtonModule, RippleModule],
     templateUrl: './chat-box.html',
     styleUrls: ['./chat-box.scss']
 })
-export class ChatBox implements OnInit, OnDestroy {
+
+export class ChatBox implements OnInit, OnDestroy, AfterViewChecked {
     @Input() gameId!: string;
 
     private webSocketService = inject(WebSocketService);
@@ -25,6 +32,9 @@ export class ChatBox implements OnInit, OnDestroy {
 
     public messages: ChatMessage[] = [];
     public newMessage: string = '';
+
+    currentUser: string = 'YourUsername';
+    @ViewChild('scrollPanel') private scrollPanel!: ElementRef;
 
     ngOnInit(): void {
         if (this.gameId) {
@@ -49,5 +59,16 @@ export class ChatBox implements OnInit, OnDestroy {
             this.webSocketService.sendMessage(destination, { content: this.newMessage });
             this.newMessage = '';
         }
+    }
+
+    ngAfterViewChecked() {
+        this.scrollToBottom();
+    }
+
+    scrollToBottom(): void {
+        try {
+            const scrollContainer = this.scrollPanel.nativeElement.querySelector('.p-scrollpanel-content');
+            scrollContainer.scrollTop = scrollContainer.scrollHeight;
+        } catch (err) { }
     }
 }

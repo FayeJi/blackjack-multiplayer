@@ -31,6 +31,7 @@ public class GameViewDto {
 
         if (state.getPhase() == GameState.GamePhase.PLAYER_TURN) {
             Hand visibleDealerHand = new Hand();
+            visibleDealerHand.addCard(state.getDealerHand().getCards().get(0));
             visibleDealerHand.addCard(new Card(null, Rank.HIDDEN));
             view.setDealerHand(visibleDealerHand);
         } else {

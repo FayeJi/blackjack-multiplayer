@@ -1,11 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService, UserStats } from '../../services/user';
+import { CardModule } from 'primeng/card';
+import { AvatarModule } from 'primeng/avatar';
+import { DividerModule } from 'primeng/divider';
+import { KnobModule } from 'primeng/knob';
 
 @Component({
     selector: 'app-player-profile',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, CardModule, AvatarModule, DividerModule, KnobModule],
     templateUrl: './player-profile.html',
     styleUrls: ['./player-profile.scss']
 })

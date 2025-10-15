@@ -1,31 +1,80 @@
-<div class="leaderboard-container">
-    <header>
-        <h1>Top Players</h1>
-        <a routerLink="/lobby">Back to Lobby</a>
-    </header>
+<p-toolbar styleClass="mb-4 shadow-1">
+    <ng-template pTemplate="start">
+        <div class="flex align-items-center gap-2">
+            <i class="pi pi-th-large text-2xl text-primary"></i>
+            <h2 class="m-0 font-bold">Top Players</h2>
+        </div>
+    </ng-template>
 
-    <div class="leaderboard-table-container">
-        <table class="leaderboard-table" *ngIf="leaderboardData$ | async as leaderboard; else loading">
-            <thead>
+    <ng-template pTemplate="end">
+        <div class="flex align-items-center gap-2">
+            <button pButton pRipple routerLink="/lobby" label="Leave to Lobby" icon="pi pi-sign-out"
+                class="p-button-danger p-button-text"></button>
+        </div>
+    </ng-template>
+</p-toolbar>
+
+<div class="flex justify-content-center p-4">
+    <p-card styleClass="w-full max-w-50rem shadow-2">
+        <p-table *ngIf="leaderboardData$ | async as leaderboard; else loading" [value]="leaderboard"
+            [paginator]="leaderboard.length > 10" [rows]="10" styleClass="p-datatable-striped"
+            responsiveLayout="scroll">
+            <ng-template pTemplate="header">
                 <tr>
-                    <th>Rank</th>
+                    <th style="width: 5rem" class="text-center">Rank</th>
                     <th>Player</th>
-                    <th>Hands Played</th>
+                    <th pSortableColumn="handsPlayed">
+                        Hands Played <p-sortIcon field="handsPlayed"></p-sortIcon>
+                    </th>
+                    <th>Hands Won</th>
                     <th>Win Rate</th>
                 </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let player of leaderboard; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ player.username }}</td>
-                    <td>{{ player.handsPlayed }}</td>
-                    <td>{{ (player.handsWon / (player.handsPlayed || 1) * 100) | number:'1.1-2' }}%</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+            </ng-template>
 
-    <ng-template #loading>
-        <p>Loading leaderboard...</p>
-    </ng-template>
+            <ng-template pTemplate="body" let-player let-rowIndex="rowIndex">
+                <tr>
+                    <td class="text-center font-bold">
+                        <i *ngIf="rowIndex === 0" class="pi pi-star-fill text-yellow-500"></i>
+                        <i *ngIf="rowIndex === 1" class="pi pi-star-fill text-gray-400"></i>
+                        <i *ngIf="rowIndex === 2" class="pi pi-star-fill text-orange-400"></i>
+                        <span *ngIf="rowIndex > 2">{{ rowIndex + 1 }}</span>
+                    </td>
+                    <td>
+                        <div class="flex align-items-center gap-2">
+                            <p-avatar [label]="player.username.substring(0, 1).toUpperCase()" shape="circle"></p-avatar>
+                            <span class="font-medium">{{ player.username }}</span>
+                        </div>
+                    </td>
+
+                    <!-- Hands Played Column -->
+                    <td>{{ player.handsPlayed }}</td>
+
+                    <td>{{ player.handsWon }}</td>
+
+                    <!-- Win Rate Column with Visual Progress Bar -->
+                    <td>
+                        <div class="flex flex-column gap-1">
+                            <span>{{ (player.handsWon / (player.handsPlayed || 1) * 100) | number:'1.1-2' }}%</span>
+                            <p-progressBar [value]="(player.handsWon / (player.handsPlayed || 1) * 100)"
+                                [showValue]="false" styleClass="h-1rem"></p-progressBar>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <!-- Empty State Message -->
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center">No player data available.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <!-- Loading State Template -->
+        <ng-template #loading>
+            <div class="flex justify-content-center align-items-center p-4" style="height: 300px">
+                <p-progressSpinner></p-progressSpinner>
+            </div>
+        </ng-template>
+    </p-card>
 </div>

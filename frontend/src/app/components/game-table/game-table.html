@@ -1,79 +1,103 @@
-<div class="game-table-container" *ngIf="gameState">
-    <div class="game-table-layout">
-        <div class="main-game-area">
-
-            <header>
-                <!-- <h1>Game Table: {{ gameState?.roomName }}</h1> -->
-                <h1 *ngIf="gameState; else loading">Game Table: {{ gameState.roomName }}</h1>
-                <ng-template #loading>
-                    <h1>Loading game...</h1>
-                </ng-template>
-                <button class="leave-button" (click)="onLeaveGame()">Leave to Lobby</button>
-                <p class="status-message">{{ gameState.statusMessage }}</p>
-            </header>
-
-            <!-- Dealer's Area -->
-            <div class="hand-area dealer-area">
-                <h2>Dealer's Hand ({{ getHandValue(gameState.dealerHand) }})</h2>
-                <div class="cards-container">
-                    <div *ngFor="let card of gameState.dealerHand.cards" class="card"
-                        [class.hidden-card]="card.rank === 'HIDDEN'">
-                        <span *ngIf="card.rank !== 'HIDDEN'">
-                            {{ card.rank }} of {{ card.suit }}
-                        </span>
-                        <span *ngIf="card.rank === 'HIDDEN'">
-                            FACE DOWN
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Players' Area -->
-            <div class="players-area">
-                <div *ngFor="let player of gameState.playerHands | keyvalue: originalOrder" class="player-hand"
-                    [ngClass]="{'active-player': player.key === gameState?.activePlayerUsername}">
-                    <h3>{{ player.key }} ({{ getHandValue(player.value) }})</h3>
-
-                    <div class="cards-container">
-                        <div *ngFor="let card of player.value.cards" class="card">
-                            {{ card.rank }} of {{ card.suit }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Player Actions Area -->
-            <div class="actions-area">
-                <div *ngIf="gameState.phase === 'WAITING'" class="waiting-controls">
-                    <h3>Waiting for players to join...</h3>
-                    <button *ngIf="isHost()" (click)="sendPlayerAction('start')">Start Game</button>
-                </div>
-
-                <!-- BETTING UI: Appears only during the 'BETTING' phase -->
-                <div *ngIf="gameState.phase === 'BETTING'" class="betting-controls">
-                    <label for="bet-amount">Your Bet:</label>
-                    <input id="bet-amount" type="number" [(ngModel)]="betAmount" min="1">
-                    <button (click)="onPlaceBet()">Place Bet</button>
-                    <button *ngIf="isHost()" (click)="sendPlayerAction('deal')">Deal Cards</button>
-                </div>
-
-                <!-- GAMEPLAY UI: Appears only during the 'PLAYER_TURN' phase -->
-                <div *ngIf="gameState.phase === 'PLAYER_TURN'" class="gameplay-controls">
-                    <p>Your Actions</p>
-                    <button (click)="sendPlayerAction('hit')" [disabled]="!isMyTurn()">Hit</button>
-                    <button (click)="sendPlayerAction('stand')" [disabled]="!isMyTurn()">Stand</button>
-                </div>
-
-                <!-- "PLAY AGAIN" UI: Appears only when the hand is over -->
-                <div *ngIf="gameState.phase === 'HAND_OVER'" class="hand-over-controls">
-                    <button *ngIf="isHost()" (click)="sendPlayerAction('reset')">Play Again</button>
-                </div>
-
-            </div>
+<p-toolbar *ngIf="gameState" styleClass="mb-4 shadow-1">
+    <ng-template pTemplate="start">
+        <div class="flex align-items-center gap-2">
+            <i class="pi pi-table text-2xl text-primary"></i>
+            <h2 class="m-0 font-bold">{{ gameState.roomName }}</h2>
         </div>
-        <div class="chat-area">
-            <!-- Pass the gameId to the chat-box component -->
+    </ng-template>
+
+    <ng-template pTemplate="center">
+        <p-tag [value]="gameState.statusMessage" severity="info" [rounded]="true"></p-tag>
+    </ng-template>
+
+    <ng-template pTemplate="end">
+        <button pButton pRipple (click)="onLeaveGame()" label="Leave to Lobby" icon="pi pi-sign-out"
+            class="p-button-danger p-button-text"></button>
+    </ng-template>
+</p-toolbar>
+
+<div class="game-table-container p-4" *ngIf="gameState" style="background-color: var(--surface-ground);">
+    <div class="grid">
+
+        <!-- Actions & Chat -->
+        <div class="col-12 lg:col-3">
+            <!--  PLAYER ACTIONS AREA -->
+            <p-card header="Controls" styleClass="mb-4">
+                <!-- WAITING Phase -->
+                <div *ngIf="gameState.phase === 'WAITING'" class="flex flex-column gap-2">
+                    <p class="text-center">Waiting for players...</p>
+                    <button *ngIf="isHost()" (click)="sendPlayerAction('start')" pButton label="Start Game"
+                        icon="pi pi-play" class="p-button-success"></button>
+                </div>
+
+                <!-- BETTING Phase -->
+                <div *ngIf="gameState.phase === 'BETTING'" class="flex flex-column gap-3">
+                    <p-floatLabel class="mt-4">
+                        <p-inputNumber [(ngModel)]="betAmount" [min]="1" [showButtons]="true"
+                            inputId="bet-amount"></p-inputNumber>
+                        <label for="bet-amount">Your Bet</label>
+                    </p-floatLabel>
+                    <button (click)="onPlaceBet()" pButton label="Place Bet" icon="pi pi-check-circle"
+                        class="p-button-raised"></button>
+                    <button *ngIf="isHost()" (click)="sendPlayerAction('deal')" pButton label="Deal Cards"
+                        icon="pi pi-arrow-right" class="p-button-secondary"></button>
+                </div>
+
+                <!-- PLAYER_TURN Phase -->
+                <div *ngIf="gameState.phase === 'PLAYER_TURN'" class="flex justify-content-center gap-2">
+                    <button (click)="sendPlayerAction('hit')" [disabled]="!isMyTurn()" pButton label="Hit"
+                        class="p-button-outlined"></button>
+                    <button (click)="sendPlayerAction('stand')" [disabled]="!isMyTurn()" pButton label="Stand"></button>
+                </div>
+
+                <!-- HAND_OVER Phase -->
+                <div *ngIf="gameState.phase === 'HAND_OVER'" class="flex flex-column gap-2">
+                    <button *ngIf="isHost()" (click)="sendPlayerAction('reset')" pButton label="Play Again"
+                        icon="pi pi-refresh" class="w-full"></button>
+                </div>
+            </p-card>
+
+            <!--  CHAT AREA -->
             <app-chat-box [gameId]="gameState!.gameId" *ngIf="gameState"></app-chat-box>
+        </div>
+
+        <div class="col-12 lg:col-9">
+            <!-- DEALER'S AREA -->
+            <p-panel header="Dealer's Hand ({{ getHandValue(gameState.dealerHand) }})" styleClass="mb-4">
+                <div class="cards-container">
+                    <div *ngFor="let card of gameState.dealerHand.cards" class="blackjack-card"
+                        [class.hidden-card]="card.rank === 'HIDDEN'">
+                        
+                        <ng-container *ngIf="card.rank !== 'HIDDEN'">
+                            <span class="rank">{{ getRankSymbol(card.rank) }}</span>
+                            <span class="suit" [ngClass]="'suit-' + card.suit.toLowerCase()"></span>
+                        </ng-container>
+
+                    </div>
+                </div>
+            </p-panel>
+
+            <!-- PLAYERS' AREA -->
+            <div class="grid">
+                <div *ngFor="let player of gameState.playerHands | keyvalue: originalOrder"
+                    class="col-12 md:col-6 xl:col-4">
+                    <p-panel Class="{'active-player-panel': player.key === gameState?.activePlayerUsername}">
+                        <ng-template pTemplate="header">
+                            <div class="flex align-items-center gap-2">
+                                <i class="pi pi-user"></i>
+                                <span class="font-bold">{{ player.key }}</span>
+                                <span>({{ getHandValue(player.value) }})</span>
+                            </div>
+                        </ng-template>
+                        <div class="cards-container">
+                            <div *ngFor="let card of player.value.cards" class="blackjack-card">
+                                <span class="rank">{{ getRankSymbol(card.rank) }}</span>
+                                <span class="suit" [ngClass]="'suit-' + card.suit.toLowerCase()"></span>
+                            </div>
+                        </div>
+                    </p-panel>
+                </div>
+            </div>
         </div>
     </div>
 </div>

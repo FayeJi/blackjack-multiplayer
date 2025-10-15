@@ -1,4 +1,64 @@
-.active-player {
-    border: 2px solid gold;
-    border-radius: 8px;
+// Custom style for the active player's panel
+:host ::ng-deep .active-player-panel {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color-text);
+}
+
+.cards-container {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    min-height: 140px; // Ensures panel doesn't jump in size
+}
+
+.blackjack-card {
+    width: 100px;
+    height: 140px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: bold;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+
+
+    &.hidden-card {
+        background-color: #b00000;
+        background-image: repeating-linear-gradient(45deg, #c00, #c00 10px, #a00 10px, #a00 20px);
+    }
+
+    .rank {
+        font-size: 1.2rem;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    .suit {
+        font-size: 2rem;
+        align-self: center;
+
+        &.suit-hearts::after {
+            content: '♥';
+            color: red;
+        }
+
+        &.suit-diamonds::after {
+            content: '♦';
+            color: red;
+        }
+
+        &.suit-clubs::after {
+            content: '♣';
+            color: black;
+        }
+
+        &.suit-spades::after {
+            content: '♠';
+            color: black;
+        }
+    }
 }

@@ -1,23 +1,75 @@
 <div class="lobby-container">
-    <app-player-profile></app-player-profile>
-    <header>
-        <h1>Game Lobby</h1>
-        <div>
-            <a routerLink="/leaderboard" class="button-link">View Leaderboard</a>
-        </div>
-        <a *ngIf="isAdmin" routerLink="/admin" class="button-link">Admin Panel</a>
-    </header>
+    <p-toolbar styleClass="shadow-1">
+        <ng-template pTemplate="start">
+            <div class="flex align-items-center gap-2">
+                <i class="pi pi-th-large text-2xl text-primary"></i>
+                <h2 class="m-0 font-bold">Game Lobby</h2>
+            </div>
+        </ng-template>
 
-    <div class="game-list">
-        <h2>Active Games</h2>
-        <div *ngIf="activeGames.length === 0" class="no-games">
-            No active games found. Why not create one?
-        </div>
+        <ng-template pTemplate="end">
+            <div class="flex align-items-center gap-2">
+                <a pButton pRipple routerLink="/leaderboard" label="Top Players" icon="pi pi-trophy"
+                    class="p-button-text">
+                </a>
 
-        <div *ngFor="let game of activeGames" class="game-item">
-            <span class="room-name">{{ game.roomName }} </span>
-            <span>(Players: {{ Object.keys(game.playerHands).length }} / 6) </span>
-            <button (click)="onJoinGame(game.gameId)">Join</button>
+                <a *ngIf="isAdmin" pButton pRipple routerLink="/admin" label="Admin Panel" icon="pi pi-cog"
+                    class="p-button-text p-button-danger">
+                </a>
+
+                <a pButton pRipple routerLink="/login" label="Log Out" icon="pi pi-power-off" (click)="onLogout()"
+                    class="p-button-text p-button-danger">
+                </a>
+
+            </div>
+        </ng-template>
+    </p-toolbar>
+
+    <div class="p-4">
+        <div class="grid">
+            <div class="col-12 md:col-8">
+                <div class="flex justify-content-center p-4">
+                    <p-card header="Active Games" styleClass="w-full max-w-40rem shadow-2">
+                        <p-table [value]="activeGames" responsiveLayout="scroll" styleClass="p-datatable-sm">
+                            <ng-template pTemplate="body" let-game>
+                                <tr>
+                                    <td class="font-bold">
+                                        {{ game.roomName }}
+                                    </td>
+
+                                    <td style="width: 10rem">
+                                        <div class="flex align-items-center gap-2">
+                                            <i class="pi pi-users"></i>
+                                            <span>{{ Object.keys(game.playerHands).length }} / 6</span>
+                                        </div>
+                                        <p-progressBar [value]="(Object.keys(game.playerHands).length / 6) * 100"
+                                            [showValue]="false" styleClass="mt-1 h-1rem"></p-progressBar>
+                                    </td>
+
+                                    <td class="text-right" style="width: 8rem">
+                                        <button pButton pRipple icon="pi pi-sign-in" label="Join"
+                                            (click)="onJoinGame(game.gameId)"
+                                            class="p-button-sm p-button-raised"></button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="3" class="text-center p-4">
+                                        <i class="pi pi-info-circle text-2xl mb-2"></i>
+                                        <p class="m-0 font-medium">No active games found. Why not create one?</p>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </p-card>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <app-player-profile></app-player-profile>
+            </div>
         </div>
     </div>
 </div>
