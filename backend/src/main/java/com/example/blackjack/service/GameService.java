@@ -5,6 +5,7 @@ import com.example.blackjack.model.User;
 import com.example.blackjack.model.game.GameState;
 import com.example.blackjack.model.game.Hand;
 import com.example.blackjack.repository.UserRepository;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -69,7 +70,7 @@ public class GameService {
         messagingTemplate.convertAndSend("/topic/game/" + gameId, gameView);
     }
 
-    public void handlePlayerAction(String gameId, String username, String action) {
+    public void handlePlayerAction(@NonNull String gameId, @NonNull String username, @NonNull String action) {
         GameState game = getGameState(gameId);
         if (game == null) return;
 
